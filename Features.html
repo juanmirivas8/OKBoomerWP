@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <!-----Hoja de estilos----->
+  <link rel="stylesheet" href="styles.css">
+  <title>SOGEVIC - FEATURES</title>
+</head>
+<body style="background-image: url(background.jpg); background-repeat: no-repeat; background-size:cover; background-attachment: fixed">
+<div id="myModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Disclaimer</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>The following content is for general information only, can be subjected to modifications in the official code
+                    and will not constitute or imply an obligation to their implementation or use in the project. <span class="badge">By <a href="https://webdevrahul007.w3spaces.com/"></a>Rahul jangid</span></p>
+            </div>
+            <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid p-0">
+  <nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">SOGEVIC</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link " href="index.html">Home</a>
+          <a class="nav-link active" aria-current="page" href="Features.html">Features</a>
+          <a class="nav-link" href="Architecture.html">Architecture</a>
+          <a class="nav-link" href="Team.html">Team</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+<!-- Background image -->
+<div
+        class="bg-image d-flex flex-column justify-content-center align-items-center w-100"
+        style="
+    background-image: url(features.jpg);
+    width:100vw;
+    height:393px;
+
+    background-repeat: no-repeat; background-size:cover;
+  "
+>
+  <div class="display-6 fw-bold">Key Features</div>
+  <div class="display-7 w-50 d-none d-sm-flex">
+    The following techniques, design and development strategies have made possible a software that's fast, easy and economic to develop resulting in extreme
+    scalability and adaptability. As a consequence, the final result is a user-friendly software, totally customized to the client's needs.
+  </div>
+</div>
+<!-- Background image -->
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item p-0 m-2 border-top">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Use of Generics types
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body row">
+          <strong>We have used generics in the Data Access Objects, the interface from which it inherits
+            and in a method that reads any type of enum from the keyboard. This has saved us tons of lines of code that would have been redundant if
+          we had not used it otherwise.</strong> <br>
+          <pre class="prettyprint col-12 col-lg-6">
+//INTERFACE CRUD WITH COMMON METHODS
+public interface CRUD&ltK,V> extends Serializable{
+
+  Boolean add(V v, K k);
+
+  Boolean update(V v, K k);
+
+  V delete(K k);
+
+  V search(K k);
+
+  void save();
+
+}
+//Example of methods of a DAO that implements AbstractDAO
+@Override
+public Boolean add(IProduct p) {
+  p.setID(keygen.generateKey());
+  return super.add((Product)p, p.getID());
+  }
+
+@Override
+public Product delete(Integer k) {
+  if(ddbb.containsKey(k)) {
+    keygen.eliminateKey(k);
+    }
+  return super.delete(k);
+  }
+          </pre>
+
+          <pre class="prettyprint col-12 col-lg-6">
+//ABSTRACT DAO THAT IMPLEMENTS CRUD
+@XmlAccessorType(XmlAccessType.FIELD)
+public abstract class AbstractDAO&ltK,V> implements CRUD&ltK,V>{
+
+  private static final long serialVersionUID = 1L;
+  public HashMap&ltK,V> ddbb;
+
+  public Boolean add(V v,K k) {
+    boolean exists = false;
+    if (v != null && k != null && !ddbb.containsKey(k)) {
+      exists = true;
+      ddbb.put(k, v);
+    }
+    return exists;
+  }
+
+  public V search(K k) {
+    return ddbb.get(k);
+  }
+
+  public V delete(K k) {
+    return ddbb.remove(k);
+  }
+
+  public Boolean update(V v, K k) {
+    Boolean res = false;
+    if(v != null && k != null && ddbb.containsKey(k)) {
+      ddbb.put(k, v);
+      res = true;
+    }
+
+    return res;
+  }
+
+  public abstract void save();
+
+}
+
+          </pre>
+
+          <pre class="prettyprint col-12 col-lg-6">
+//METHOD THAT READ ANY ENUM
+public &ltT extends Enum&ltT>> Enum&ltT> readEnumBucle (String mensaje,Class&ltT> clase){
+  Boolean invalido = true;
+  Enum&ltT> a = null;
+  do {
+      try {
+          System.out.println("Datos compatibles: ");
+          System.out.println(java.util.Arrays.asList(clase.getEnumConstants()));
+          a = readEnum(mensaje,clase);
+          invalido = false;
+      }catch(IllegalArgumentException e) {
+          System.out.println(e.getMessage());
+      }
+  }while(invalido);
+
+  return a;
+}
+//Example of the method in function
+Datos compatibles:
+[MCRS3, MCRS7, MCRS12, MCRS16, MCRS18]
+Insert rating:
+mcrs3
+Dato no compatible
+Datos compatibles:
+[MCRS3, MCRS7, MCRS12, MCRS16, MCRS18]
+Insert rating:
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item p-0 m-2 border-top">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Singleton Pattern
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div class="accordion-body row">
+          <strong>The Singleton Pattern has been critical in the development of the project as it allows us not only to not overload the program with
+          redundant objects, but to know for certainty we are working with the same instance. This will probe crucial later in the Abstract section.</strong>
+          <pre class="prettyprint col-12 col-lg-6">
+//Singleton of a DAO
+private static ItemDAO instance = null;
+  private IDGenerator keygen;
+
+  private ItemDAO() {
+    keygen = new IDGenerator();
+  }
+
+  public static ItemDAO newInstance() {
+    if (instance == null) {
+      instance = new ItemDAO();
+      ItemDAO aux = load();
+      instance.ddbb = aux.ddbb;
+      instance.keygen = aux.keygen;
+    }
+    return instance;
+  }
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//MAIN USE OF THE SINGLETON PATTERN
+protected AbstractController() {
+  if(!instanciated) {
+    instanciated = true;
+    view = UI.newInstance();
+    appController = AppController.newInstance();
+
+    clients = ClientDAO.newInstance();
+    clientController = ClientController.newInstance();
+    clientView = ClientsUI.newInstance();
+
+    products = ProductDAO.newInstance();
+    items = ItemDAO.newInstance();
+    productController = ProductController.newInstance();
+    productView = ProductsUI.newInstance();
+
+  }
+	}
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//SINGLETON OF A UI
+private ProductsUI(){
+    super();
+  }
+
+  private static ProductsUI instance= null;
+
+  public static ProductsUI newInstance(){
+      if(instance == null) {
+       instance = new ProductsUI();
+      }
+      return instance;
+  }
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//SINGLETON OF A CONTROLLER
+private AppController() {
+      super();
+	}
+
+  private static AppController instance = null;
+  public static AppController newInstance() {
+      if(instance == null) {
+        instance = new AppController();
+      }
+      return instance;
+	}
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item p-0 m-2 border-top">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Abstract Classes
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+        <div class="accordion-body row">
+          <strong>Abstract classes have allowed us to reduce to minimum repeated code, such is the case of the Data Access Objects who inherit from
+          AbstractDAO. But most importantly, we have been able to interconnect all the controllers between each other, along with the Data Access Objects and
+          all view objects thanks to the AbstractController class. The views have also access to the DAOs in order to make support consults.
+            <br>
+          This design is the most important single feature of the project and the results are the fact that we are able to use all functionalities of the
+            program anywhere, without compromising encapsulation and the proper separation of the code. Thus, we can code efficiently, add new features light-fast
+            and adapt to new requisites. <br>
+            It should be mentioned that this last benefit is only possible if a proper system of interfaces have been set up in the design phase of the project.
+          </strong>
+          <pre class="prettyprint col-12 col-lg-6">
+//ABSTRACT CONTROLLER
+public abstract class AbstractController {
+  protected static IClientDAO clients;
+  protected static IProductDAO products;
+  protected static IItemDAO items;
+  protected static IReservationDAO reservations;
+
+  protected static IClientUI clientView;
+  protected static IProductsUI productView;
+  protected static IReservationUI reservationView;
+  protected static IUI view;
+
+  protected static IClientController clientController;
+  protected static IProductsController productController;
+  protected static IReservationController reservationController;
+  protected static IAppController appController;
+
+  protected AbstractController() {
+    if(!instanciated) {
+      instanciated = true;
+      view = UI.newInstance();
+      appController = AppController.newInstance();
+
+      clients = ClientDAO.newInstance();
+      clientController = ClientController.newInstance();
+      clientView = ClientsUI.newInstance();
+
+      products = ProductDAO.newInstance();
+      items = ItemDAO.newInstance();
+      productController = ProductController.newInstance();
+      productView = ProductsUI.newInstance();
+    }
+  }
+
+  private static Boolean instanciated = false;
+
+  public void save() {
+    clients.save();
+    products.save();
+    items.save();
+  }
+}
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//ABSTRACT UI
+public abstract class AbstractUI {
+  protected Escaner sc;
+  protected IClientDAO clients;
+  protected IProductDAO products;
+  protected IItemDAO items;
+
+  public AbstractUI() {
+    sc = Escaner.newInstance();
+    clients = ClientDAO.newInstance();
+    products = ProductDAO.newInstance();
+    items = ItemDAO.newInstance();
+  }
+
+  public Integer readOption(Integer inf, Integer sup) {
+    return sc.readIntBucle("Insert option: ", inf, sup);
+  }
+
+  public void printReturnBack() {
+    System.out.println("");
+    System.out.println("Returning back ...");
+    System.out.println("");
+  }
+
+  public void operationResult(Boolean res) {
+    if(res) {
+      System.out.println("Successfull operation");
+    } else {
+      System.out.println("Failed operation");
+    }
+  }
+
+  public String readDNI() {
+    return sc.readStringBucle("Insert DNI: ", "[0-9]{8}[A-Z]");
+  }
+
+  public Integer readID() {
+    return sc.readIntBucle("Insert ID : ", 0, Integer.MAX_VALUE);
+  }
+}
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//ABSTRACT DAO
+@XmlAccessorType(XmlAccessType.FIELD)
+public abstract class AbstractDAO&ltK,V> implements CRUD&ltK,V>{
+
+  private static final long serialVersionUID = 1L;
+  public HashMap&ltK,V> ddbb;
+
+  public Boolean add(V v,K k) {
+    boolean exists = false;
+    if (v != null && k != null && !ddbb.containsKey(k)) {
+      exists = true;
+      ddbb.put(k, v);
+    }
+    return exists;
+  }
+
+  public V search(K k) {
+    return ddbb.get(k);
+  }
+
+  public V delete(K k) {
+    return ddbb.remove(k);
+  }
+
+  public Boolean update(V v, K k) {
+    Boolean res = false;
+    if(v != null && k != null && ddbb.containsKey(k)) {
+      ddbb.put(k, v);
+      res = true;
+    }
+
+    return res;
+  }
+
+  public abstract void save();
+
+}
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item p-0 m-2 border-top">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Interfaces
+        </button>
+      </h2>
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+        <div class="accordion-body row">
+          <strong>We have made extensive use of interfaces, which have allowed us to code independently. The only need of proper instances are only necessary
+          in the view when we read a Client for example, or when we need to call the newInstance functions in the abstracts controllers and views.</strong>
+          <pre class="prettyprint col-12 col-lg-6">
+//IClient
+public interface IClient extends Serializable{
+
+  String getName();
+  void setName(String name)throws IllegalArgumentException;
+
+  String getDNI();
+  void setDNI(String dni)throws IllegalArgumentException;
+
+  Integer getAge();
+  void setAge(Integer age)throws IllegalArgumentException;
+
+  String getPhoneNumber();
+  void setPhoneNumber(String phoneNumber)throws IllegalArgumentException;
+
+  LocalDateTime getRegisterTime();
+  void setRegisterTime(LocalDateTime t);
+
+  @Override
+  public int hashCode();
+
+  @Override
+  public boolean equals(Object e);
+
+  @Override
+  String toString();
+
+}
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//ICLIENTUI
+public interface IClientUI {
+
+  IClient readClient();
+
+  void modifyClient(IClient c);
+
+  void printClient(IClient c);
+
+  void printClientMenu();
+
+  void printListMenu();
+
+  void operationResult(Boolean res);
+
+  void printList(Collection&ltClient> c);
+
+  void printReturnBack();
+
+  String readDNI();
+
+  Integer readOption(Integer inf, Integer sup);
+}
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//IClientDAO - Inherits methods from CRUD
+public interface IClientDAO extends CRUD&ltString,Client>{
+  Collection&ltClient> listOfClientsByName();
+
+  Collection&ltClient> listOfClientsByKey();
+
+  Collection&ltClient> listOfClientsByPhoneNumber();
+
+  Collection&ltClient> listOfClientsByAge();
+
+  Collection&ltClient> listOfClientsByRegistrationDate();
+}
+
+          </pre>
+          <pre class="prettyprint col-12 col-lg-6">
+//CASE 1: CODIFICATION OF THE PROPER CLASS
+protected AbstractController() {
+  if(!instanciated) {
+      instanciated = true;
+      view = UI.newInstance();
+      appController = AppController.newInstance();
+
+      clients = ClientDAO.newInstance();
+      clientController = ClientController.newInstance();
+      clientView = ClientsUI.newInstance();
+
+      products = ProductDAO.newInstance();
+      items = ItemDAO.newInstance();
+      productController = ProductController.newInstance();
+      productView = ProductsUI.newInstance();
+  }
+}
+//CASE 2: EXAMPLE OF NEED OF INSTANTIATION OF CLASS
+@Override
+public IClient readClient() {
+    String dni = sc.readStringBucle("Insert DNI: ", "[0-9]{8}[A-Z]");
+    String name = sc.readString("Insert name: ");
+    Integer age = sc.readIntBucle("Insert age: ", 0, 120);
+    String phone = sc.readStringBucle("Insert phone: ", "[0-9]{9}");
+
+    return new Client(dni, name, age, phone);
+}
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item p-0 m-2 border-top">
+    <h2 class="accordion-header" id="headingFive">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFIve">
+       Enums
+      </button>
+    </h2>
+    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+      <div class="accordion-body row">
+        <strong>Enums allow us to compress a lot of meaningful data into short variables.</strong>
+        <pre class="prettyprint col-12 col-lg-6">
+//Enum Movie Content Rating System
+public enum MCRS implements Serializable{
+  MCRS3(3,"Intended for all audiences"),
+  MCRS7(7,"Intended for audiences older than 7 years old"),
+  MCRS12(12,"Intended for audiences older than 12 years old"),
+  MCRS16(16,"Intended for audiences older than 16 years old"),
+  MCRS18(18,"Intended for adult audiences");
+
+  private final String rating;
+  private final Integer age;
+
+  private MCRS(Integer age, String rating) {
+      this.rating = rating;
+      this.age = age;
+  }
+
+  public Integer getAge() {
+      return this.age;
+  }
+
+  public String getRating() {
+      return this.rating;
+  }
+
+}
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//Preservation Condition of items
+public enum PreservationCondition implements Serializable{
+
+  EXCELLENT(5),GOOD(4),USED(3),BAD(2),TERMINAL(1);
+
+  private final Integer order;
+
+  private PreservationCondition(Integer order) {
+    this.order=order;
+  }
+
+  Integer getOrder() {
+    return this.order;
+  }
+}
+
+          </pre>
+      </div>
+    </div>
+  </div>
+    <div class="accordion-item p-0 m-2 border-top">
+    <h2 class="accordion-header" id="headingSeven">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+        XML
+      </button>
+    </h2>
+    <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+      <div class="accordion-body row">
+        <strong>We have used XML files along with JAXB libraries in order to create persistent data. We load the data when newInstance methods are called at the beginning
+        of the program, and we save the data once the program ends.</strong>
+        <pre class="prettyprint col-12 col-lg-6">
+//ADAPTER FOR LOCALDATETIME
+public class Adapters {
+
+  public static class LocalDateTimeBind extends XmlAdapter&ltString, LocalDateTime> {
+
+    @Override
+    public LocalDateTime unmarshal(String val) {
+      return LocalDateTime.parse(val, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SS"));
+    }
+
+    @Override
+    public String marshal(LocalDateTime localDateTime) {
+      return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SS"));
+    }
+  }
+}
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//EXAMPLE OF DAO
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso(Item.class)
+public class ItemDAO extends interfaces.AbstractDAO&ltInteger, Item> implements interfaces.products.IItemDAO {
+
+  private static final long serialVersionUID = 1L;
+  private static ItemDAO instance = null;
+  private IDGenerator keygen;
+
+  private ItemDAO() {
+    keygen = new IDGenerator();
+  }
+
+  public static ItemDAO newInstance() {
+    if (instance == null) {
+      instance = new ItemDAO();
+      ItemDAO aux = load();
+      instance.ddbb = aux.ddbb;
+      instance.keygen = aux.keygen;
+    }
+    return instance;
+  }
+
+
+  @Override
+  public void save() {
+    // TODO Auto-generated method stub
+    try {
+      JAXBContext c = JAXBContext.newInstance(ItemDAO.class);
+      Marshaller m = c.createMarshaller();
+      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+      m.marshal(instance, new File("/home/juanmi_rivas_8/Desktop/OKBoomer/src/main/resources/item.xml"));
+    } catch (JAXBException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static ItemDAO load() {
+    // TODO Auto-generated method stub
+    JAXBContext c;
+    ItemDAO newDDBB = null;
+
+    try {
+      c = JAXBContext.newInstance(ItemDAO.class);
+      Unmarshaller um = c.createUnmarshaller();
+
+      newDDBB = (ItemDAO) um.unmarshal(new File("/home/juanmi_rivas_8/Desktop/OKBoomer/src/main/resources/item.xml"));
+    } catch (JAXBException e) {
+      e.printStackTrace();
+    }
+
+    return newDDBB;
+  }
+          </pre>
+      </div>
+    </div>
+  </div>
+    <div class="accordion-item p-0 m-2 border-top">
+    <h2 class="accordion-header" id="headingSix">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+        Regular Expressions
+      </button>
+    </h2>
+    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+      <div class="accordion-body row">
+        <strong>With the use of regular expressions we can validate the format of desired input.</strong>
+        <pre class="prettyprint col-12 col-lg-6">
+//DNI REGULAR EXPRESSION
+@Override
+public IClient readClient() {
+  String dni = sc.readStringBucle("Insert DNI: ", "[0-9]{8}[A-Z]");
+  String name = sc.readString("Insert name: ");
+  Integer age = sc.readIntBucle("Insert age: ", 0, 120);
+  String phone = sc.readStringBucle("Insert phone: ", "[0-9]{9}");
+
+  return new Client(dni, name, age, phone);
+}
+//METHOD THAT READ A DATE
+public LocalDateTime readDateBucle(String mensaje){
+  LocalDateTime date = null;
+  String d = readStringBucle(mensaje,"^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
+            + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$"
+            + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$"
+            + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$");
+
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+  date=LocalDateTime.parse(d, formatter);
+  return date;
+}
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//METHODS THAT READ A STRING WHICH MATCHES A REGEX
+public String readString(String mensaje,String regex)throws IllegalArgumentException {
+  System.out.println(mensaje);
+  String retCad = sc.nextLine();
+
+  if(!retCad.matches(regex)) {
+    throw new IllegalArgumentException("Formato invalido");
+  }
+  return retCad;
+}
+
+public String readStringBucle(String mensaje,String regex) {
+  String retCad = null;
+  Boolean invalido = true;
+  do {
+    invalido = true;
+    try {
+      retCad = this.readString(mensaje, regex);
+      invalido=false;
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }while(invalido);
+  return retCad;
+}
+          </pre>
+      </div>
+    </div>
+  </div>
+    <div class="accordion-item p-0 m-2 border-top">
+    <h2 class="accordion-header" id="headingEight">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+        Lambda functions
+      </button>
+    </h2>
+    <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+      <div class="accordion-body row">
+        <strong>Lambda functions implement functional interfaces (interfaces with only one abstract method) without the necessity of implementing a proper class.
+          <br>This allows us to reduce severely the amount of classes in the project and to increase code readability.
+
+        </strong>
+        <pre class="prettyprint col-12 col-lg-6">
+//SORT EXAMPLE LOCALDATETIME
+@Override
+public Collection&ltClient> listOfClientsByRegistrationDate() {
+  ArrayList&ltClient> c = new ArrayList<>(ddbb.values());
+  c.sort((c1,c2)->c1.getRegisterTime().compareTo(c2.getRegisterTime()));
+  return c;
+}
+//FOR EACH EXAMPLE
+@Override
+public void printList(Collection&ltClient> c) {
+  c.forEach(x->printClient(x));
+}
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//CLASS THAT IMPLEMENTS COMPARABLE INTERFACE
+public class Producto extends AbsProducto implements Comparable&ltProducto>{
+  @Override
+  public int compareTo(Producto o) {
+    return (int)(this.precio - o.getPrecio());
+};
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//LAMDA COMPARETO VS COMPARATOR VS LAMBDA COMPARATOR
+@Override
+public Collection&ltProduct> listOfItemsByRating() {
+  EnumComparator c = new EnumComparator();
+  ArrayList&ltProduct> p = new ArrayList<>(ddbb.values());
+  //p.sort(c);
+  //p.sort((p1,p2)->p1.getRating().compareTo(p2.getRating()));
+  p.sort((o1,o2)->{return o1.getRating().getAge()-o2.getRating().getAge();});
+  return p;
+}
+          </pre>
+        <pre class="prettyprint col-12 col-lg-6">
+//COMPARATOR CLASS
+public class EnumComparator implements Comparator&ltProduct> {
+  @Override
+  public int compare(Product o1, Product o2) {
+    System.out.println(o1.getRating().getAge()-o2.getRating().getAge());
+    return o1.getRating().getAge()-o2.getRating().getAge();
+  }
+}
+          </pre>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+<!-- Footer -->
+<footer class="bg-info text-white text-center">
+  <!-- Grid container -->
+  <div class="container p-4">
+    <!--Grid row-->
+    <div class="row">
+
+      <!--Grid column-->
+      <div class="col-lg-12 col-md-12 mb-2 mb-md-2 mb-md-0">
+        <h5 class="text-uppercase">Menu</h5>
+
+        <ul class="list-unstyled mb-0">
+          <li>
+            <a href="index.html" class="text-white">Home</a>
+          </li>
+          <li>
+            <a href="Features.html" class="text-white">Features</a>
+          </li>
+          <li>
+            <a href="Architecture.html" class="text-white">Architecture</a>
+          </li>
+          <li>
+            <a href="Team.html" class="text-white">Team</a>
+          </li>
+        </ul>
+      </div>
+      <!--Grid column-->
+    </div>
+    <!--Grid row-->
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: cornflowerblue;">
+    Enlace a GitHub:
+    <a class="text-white" href="https://github.com/juanmirivas8/OKBoomer">OKBoomer</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#myModal").modal('show');
+    });
+</script>
+</body>
+</html>
